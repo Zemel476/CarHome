@@ -85,8 +85,7 @@ class ErshoucheSpider(CrawlSpider):
     def parse_config(self, response):
         # 从meta中获取item
         item = response.meta.get("item")
-        specid = response.meta.get("specid")
-        
+
         # 处理JSONP响应，去除callback函数名
         jsonp_text = response.text
         json_text = jsonp_text[jsonp_text.index('(') + 1 : jsonp_text.rindex(')')]
