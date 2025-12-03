@@ -3,6 +3,7 @@
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
+import random
 from scrapy import signals
 
 # useful for handling different item types with a single interface
@@ -51,6 +52,26 @@ class QichezhijiaSpiderMiddleware:
 
     def spider_opened(self, spider):
         spider.logger.info("Spider opened: %s" % spider.name)
+
+
+class RandomUserAgentMiddleware:
+    """随机选择User-Agent的中间件"""
+    
+    def __init__(self, user_agent_list):
+        self.user_agent_list = user_agent_list
+    
+    @classmethod
+    def from_crawler(cls, crawler):
+        """从settings中获取USER_AGENT_LIST"""
+        return cls(
+            user_agent_list=crawler.settings.getlist("USER_AGENT_LIST")
+        )
+    
+    def process_request(self, request, spider):
+        if self.user_agent_list:
+            user_agent = random.choice(self.user_agent_list)
+            request.headers.setdefault('User-Agent', user_agent)
+        return None
 
 
 class QichezhijiaDownloaderMiddleware:
